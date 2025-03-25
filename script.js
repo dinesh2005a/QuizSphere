@@ -13,26 +13,25 @@ const quizData = [
         question: "Which of the following is NOT a part of the six Vedāṅgas?",
         options: ["Jyotiṣa", "Vyākaraṇa", "Darśana", "Nirukta"],
         correct: 2
-    },
-    {
-        question: "In ancient Indian tradition, which text is considered a foundational work on linguistics and grammar?",
-        options: ["Arthashastra", "Yoga Sutras", "Ashtadhyayi", "Taittiriya Upanishad"],
-        correct: 2
-    },
-    {
-        question: "The Śulba Sūtras primarily deal with which subject?",
-        options: ["Astronomy", "Geometry and measurement", "Ethics and philosophy", "Ritualistic worship"],
-        correct: 1
-    },
-    {
-        question: "What is the primary goal of 'Dharmaśāstra' in Indian literature?",
-        options: ["To establish moral and legal guidelines", "To describe scientific advancements", "To narrate mythological stories", "To explain the principles of meditation"],
-        correct: 0
     }
 ];
 
+let playerName = "";
 let currentQuestion = 0;
 let score = 0;
+
+function startQuiz() {
+    playerName = document.getElementById("player-name").value.trim();
+    if (playerName === "") {
+        alert("Please enter your name!");
+        return;
+    }
+
+    document.getElementById("name-container").classList.add("hidden");
+    document.getElementById("quiz-container").classList.remove("hidden");
+
+    loadQuestion();
+}
 
 function loadQuestion() {
     const quizContainer = document.getElementById("quiz");
@@ -55,6 +54,7 @@ function loadQuestion() {
     });
 
     quizContainer.appendChild(optionsContainer);
+    document.getElementById("submitBtn").classList.remove("hidden");
 }
 
 function selectAnswer(selectedIndex) {
@@ -85,9 +85,35 @@ function checkAnswer(selectedIndex) {
 
 function showResult() {
     const quizContainer = document.getElementById("quiz");
-    quizContainer.innerHTML = `<div class='result'>Your Score: ${score}/${quizData.length}</div>`;
+    quizContainer.innerHTML = `<div class='result'>${playerName}, Your Score: ${score}/${quizData.length}</div>`;
+    
+    updateLeaderboard();
+    
+    document.getElementById("submitBtn").classList.add("hidden");
+    document.getElementById("restartBtn").classList.remove("hidden");
+}
+
+function updateLeaderboard() {
+    let topScorer = localStorage.getItem("topScorer") || "No scores yet.";
+    let topScore = parseInt(localStorage.getItem("topScore")) || 0;
+
+    if (score > topScore) {
+        topScorer = `${playerName} - ${score}/${quizData.length}`;
+        localStorage.setItem("topScorer", topScorer);
+        localStorage.setItem("topScore", score);
+    }
+
+    document.getElementById("top-scorer").innerText = topScorer;
+}
+
+function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    document.getElementById("quiz-container").classList.add("hidden");
+    document.getElementById("name-container").classList.remove("hidden");
+    document.getElementById("restartBtn").classList.add("hidden");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadQuestion();
+    document.getElementById("top-scorer").innerText = localStorage.getItem("topScorer") || "No scores yet.";
 });

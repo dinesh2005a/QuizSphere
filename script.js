@@ -107,11 +107,14 @@ function updateLeaderboard() {
 }
 
 function restartQuiz() {
+    playerName = "";  // Reset the player name
     currentQuestion = 0;
     score = 0;
-    document.getElementById("quiz-container").classList.add("hidden");
-    document.getElementById("name-container").classList.remove("hidden");
-    document.getElementById("restartBtn").classList.add("hidden");
+    
+    document.getElementById("player-name").value = ""; // Clear input field
+    document.getElementById("quiz-container").classList.add("hidden"); // Hide quiz
+    document.getElementById("name-container").classList.remove("hidden"); // Show name input section
+    document.getElementById("restartBtn").classList.add("hidden"); // Hide restart button
 }
 
 document.addEventListener("DOMContentLoaded", () => {

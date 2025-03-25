@@ -1,92 +1,20 @@
-import React, { useState } from "react";
-import "./styles.css";
-
-const questions = [
-  {
-    question: "What term is used to describe the established truth after resolving a doubt in the Indian knowledge framework?",
-    options: ["Prameya", "Nirṇaya", "Siddhānta", "Pramātā"],
-    answer: "Siddhānta",
-  },
-  {
-    question: "Which ancient text was written by Viṣṇu Śarmā to educate princes?",
-    options: ["Hitopadeśa", "Vidura-Nīti", "Pañcatantra", "Nīti-śataka"],
-    answer: "Pañcatantra",
-  },
-  // Add more questions here...
-];
-
-const MCQ = ({ onAnswerSelected }) => {
-  const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [score, setScore] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleOptionChange = (index, option) => {
-    setSelectedAnswers({ ...selectedAnswers, [index]: option });
-  };
-
-  const handleSubmit = () => {
-    let newScore = 0;
-    questions.forEach((q, index) => {
-      if (selectedAnswers[index] === q.answer) {
-        newScore += 1;
-      }
-    });
-    setScore(newScore);
-    setSubmitted(true);
-    onAnswerSelected(newScore);
-  };
-
-  return (
-    <div className="mcq-container">
-      {questions.map((q, index) => (
-        <div key={index} className="question-card">
-          <h3>{q.question}</h3>
-          {q.options.map((option, i) => (
-            <label key={i} className="option-label">
-              <input
-                type="radio"
-                name={`question-${index}`}
-                value={option}
-                onChange={() => handleOptionChange(index, option)}
-                disabled={submitted}
-              />
-              {option}
-            </label>
-          ))}
-        </div>
-      ))}
-      {!submitted && <button onClick={handleSubmit}>Submit</button>}
-      {submitted && <h2>Your Score: {score}/{questions.length}</h2>}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Knowledge Systems Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Indian Knowledge Systems Quiz</h1>
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="result"></div>
     </div>
-  );
-};
-
-const Dashboard = ({ totalAttempts, totalScore }) => {
-  return (
-    <div className="dashboard">
-      <h2>Dashboard</h2>
-      <p>Total Attempts: {totalAttempts}</p>
-      <p>Total Score: {totalScore}</p>
-    </div>
-  );
-};
-
-const App = () => {
-  const [totalAttempts, setTotalAttempts] = useState(0);
-  const [totalScore, setTotalScore] = useState(0);
-
-  const handleAnswerSelected = (score) => {
-    setTotalAttempts(totalAttempts + 1);
-    setTotalScore(totalScore + score);
-  };
-
-  return (
-    <div className="app-container">
-      <h1>MCQ Test</h1>
-      <MCQ onAnswerSelected={handleAnswerSelected} />
-      <Dashboard totalAttempts={totalAttempts} totalScore={totalScore} />
-    </div>
-  );
-};
-
-export default App;
+    <script src="script.js"></script>
+</body>
+</html>

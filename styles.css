@@ -1,74 +1,119 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 20px;
+const quizData = [
+    {
+        question: "What is the primary focus of Indian Knowledge Systems (IKS)?",
+        options: [
+            "Developing modern scientific theories",
+            "Integrating Western and Eastern philosophical traditions",
+            "Understanding indigenous knowledge rooted in Indian traditions",
+            "Promoting only religious teachings in ancient India"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following is NOT a part of the six Vedāṅgas?",
+        options: ["Jyotiṣa", "Vyākaraṇa", "Darśana", "Nirukta"],
+        correct: 2
+    }
+];
+
+let playerName = "";
+let currentQuestion = 0;
+let score = 0;
+
+function startQuiz() {
+    playerName = document.getElementById("player-name").value.trim();
+    if (playerName === "") {
+        alert("Please enter your name!");
+        return;
+    }
+
+    document.getElementById("name-container").classList.add("hidden");
+    document.getElementById("quiz-container").classList.remove("hidden");
+
+    loadQuestion();
 }
 
-.container {
-    max-width: 800px;
-    background: white;
-    padding: 20px;
-    margin: auto;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+function loadQuestion() {
+    const quizContainer = document.getElementById("quiz");
+    quizContainer.innerHTML = "";
+
+    const questionEl = document.createElement("div");
+    questionEl.classList.add("question");
+    questionEl.innerText = quizData[currentQuestion].question;
+    quizContainer.appendChild(questionEl);
+
+    const optionsContainer = document.createElement("div");
+    optionsContainer.classList.add("options");
+
+    quizData[currentQuestion].options.forEach((option, index) => {
+        const optionEl = document.createElement("div");
+        optionEl.classList.add("option");
+        optionEl.innerText = option;
+        optionEl.onclick = () => selectAnswer(index);
+        optionsContainer.appendChild(optionEl);
+    });
+
+    quizContainer.appendChild(optionsContainer);
+    document.getElementById("submitBtn").classList.remove("hidden");
 }
 
-h1 {
-    text-align: center;
-    color: #333;
+function selectAnswer(selectedIndex) {
+    const options = document.querySelectorAll(".option");
+    options.forEach((option, index) => {
+        option.classList.remove("selected");
+        if (index === selectedIndex) {
+            option.classList.add("selected");
+        }
+    });
+
+    document.getElementById("submitBtn").onclick = () => checkAnswer(selectedIndex);
 }
 
-.question {
-    font-size: 18px;
-    margin-bottom: 10px;
+function checkAnswer(selectedIndex) {
+    if (selectedIndex === quizData[currentQuestion].correct) {
+        score++;
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
 }
 
-.options {
-    margin-bottom: 20px;
+function showResult() {
+    const quizContainer = document.getElementById("quiz");
+    quizContainer.innerHTML = `<div class='result'>${playerName}, Your Score: ${score}/${quizData.length}</div>`;
+    
+    updateLeaderboard();
+    
+    document.getElementById("submitBtn").classList.add("hidden");
+    document.getElementById("restartBtn").classList.remove("hidden");
 }
 
-.option {
-    display: block;
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin: 5px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #f5f5f5;
-    transition: 0.3s;
+function updateLeaderboard() {
+    let topScorer = localStorage.getItem("topScorer") || "No scores yet.";
+    let topScore = parseInt(localStorage.getItem("topScore")) || 0;
+
+    if (score > topScore) {
+        topScorer = `${playerName} - ${score}/${quizData.length}`;
+        localStorage.setItem("topScorer", topScorer);
+        localStorage.setItem("topScore", score);
+    }
+
+    document.getElementById("top-scorer").innerText = topScorer;
 }
 
-.option:hover {
-    background: #ddd;
+function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    document.getElementById("quiz-container").classList.add("hidden");
+    document.getElementById("name-container").classList.remove("hidden");
+    document.getElementById("restartBtn").classList.add("hidden");
 }
 
-.selected {
-    background: #4CAF50;
-    color: white;
-    border-color: #4CAF50;
-}
-
-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-}
-
-button:hover {
-    background: #0056b3;
-}
-
-.result {
-    text-align: center;
-    font-size: 18px;
-    margin-top: 10px;
-    font-weight: bold;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("top-scorer").innerText = localStorage.getItem("topScorer") || "No scores yet.";
+});

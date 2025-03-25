@@ -7,14 +7,23 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>Indian Knowledge Systems Quiz</h1>
-        <form id="quiz-form">
+    <div id="main-container">
+        <div id="start-container">
+            <h1>Indian Knowledge Systems Quiz</h1>
+            <input type="text" id="playerName" placeholder="Enter your name">
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <div id="quiz-container" style="display:none;">
+            <h1>Indian Knowledge Systems Quiz</h1>
+            <h2 id="playerDisplay"></h2>
             <div id="quiz"></div>
-            <button type="submit">Submit</button>
-        </form>
-        <div id="result"></div>
+            <button id="submitBtn">Submit</button>
+        </div>
+
+        <div id="result-container" style="display:none;">
+            <h1>Leaderboard</h1>
+            <h2 id="topScorerDisplay"></h2>
+            <button onclick="restartQuiz()">Play Again</button>
+        </div>
     </div>
-    <script src="script.js" defer></script>
-</body>
-</html>
